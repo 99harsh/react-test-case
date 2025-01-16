@@ -1,0 +1,30 @@
+import React, { useState, useEffect } from 'react';
+
+interface StreamingTextProps {
+  text: string;
+  speed?: number;
+  className?: string;
+}
+
+export function StreamingText({ text, speed = 50, className = '' }: StreamingTextProps) {
+  const [displayedText, setDisplayedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, text, speed]);
+
+  return (
+    <p className={`font-mono ${className}`}>
+      {displayedText}
+      <span className="animate-pulse">|</span>
+    </p>
+  );
+}
